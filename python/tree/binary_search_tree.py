@@ -164,6 +164,60 @@ class BinarySearchTree:
     def __getitem__(self, key):
         return self.get(key)
 
+    def pre_order(self):
+        '''对二叉搜索树进行前序遍历（深度优先遍历）'''
+        self._pre_order(self.root)
+
+    def _pre_order(self, node):
+        if node is not None:
+            print(node.value)
+            self._pre_order(node.left)
+            self._pre_order(node.right)
+
+    def in_order(self):
+        '''对二叉搜索树进行中序遍历'''
+        self._in_order(self.root)
+
+    def _in_order(self, node):
+        if node is not None:
+            self._in_order(node.left)
+            print(node.value)
+            self._in_order(node.right)
+
+    def post_order(self):
+        '''对二叉搜索树进行后序遍历'''
+        self._post_order(self.root)
+
+    def _post_order(self, node):
+        if node is not None:
+            self._post_order(node.left)
+            self._post_order(node.right)
+            print(node.value)
+
+    def level_order(self):
+        '''层序遍历（广度优先遍历）
+        引入一个队列，将跟节点入队；
+        while循环，判断队列是否为空，如果不为空则循环；
+        循环中，将队首的元素拿出并出队，然后将它左右子节点入队，直至最后一层；
+        '''
+
+    def minimum(self):
+        '''寻找最小值的键值
+        向左查询，直到某个节点没有左节点
+        可递归，可迭代
+        maximum类似
+        '''
+
+    def remove_min(self):
+        '''删除掉最小值所在的节点
+        递归节点，判断左子节点是否存在，如果存在，则继续递归左子节点，并且，将递归结果赋值给节点的左子节点；
+        如果左子节点不存在，则说明此节点即为最小节点，那么将右子节点取出，并删除掉左子节点，返回右子节点。
+        递归的返回值会赋值到上一层的左子节点上，这样就实现了删除的节点的子节点移动到删除的节点的父节点上。
+        删除最小值同理，查右子节点，删除右子节点，返回左子节点，赋值给父节点的右子节点。
+        记得count--；
+        递归迭代均可
+        '''
+
     def print_root(self, node='root'):
         if node == 'root':
             node = self.root
@@ -180,3 +234,6 @@ if __name__ == "__main__":
         b[i] = value
     b.print_root()
     print(b[7])
+
+
+# 用后序遍历析构类
