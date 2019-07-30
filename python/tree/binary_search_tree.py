@@ -1,4 +1,4 @@
-import random
+import queue
 
 
 class TreeNode:
@@ -14,6 +14,11 @@ class BinarySearchTree:
     def __init__(self):
         '''初始化二叉树'''
         self.root = None
+        self.count = 0
+
+    def __del__(self):
+        '''删除所有节点，释放内存'''
+        self._remove_post_order(self.root)
         self.count = 0
 
     def insert(self, key, value, type="iteration"):
@@ -165,75 +170,283 @@ class BinarySearchTree:
         return self.get(key)
 
     def pre_order(self):
-        '''对二叉搜索树进行前序遍历（深度优先遍历）'''
+        '''深度优先遍历
+        对二叉搜索树进行前序遍历，引用方法
+        '''
         self._pre_order(self.root)
 
     def _pre_order(self, node):
+        '''对二叉搜索树进行前序遍历，执行方法
+        如果节点不为空，则打印自身并以此递归左子节点和右子节点
+
+        Agre:
+            node: 节点
+        '''
         if node is not None:
-            print(node.value)
+            print('{key: %s, value: %s}' % (node.key, node.value))
             self._pre_order(node.left)
             self._pre_order(node.right)
 
     def in_order(self):
-        '''对二叉搜索树进行中序遍历'''
+        '''深度优先遍历
+        对二叉搜索树进行中序遍历，引用方法
+
+        从小到大依次遍历，可应用于排序情景;
+        '''
         self._in_order(self.root)
 
     def _in_order(self, node):
+        '''对二叉搜索树进行中序遍历，执行方法
+        如果节点不为空，则递归左子节点，然后打印自身，最后递归右子节点
+
+        Agre:
+            node: 节点
+        '''
         if node is not None:
             self._in_order(node.left)
-            print(node.value)
+            print('{key: %s, value: %s}' % (node.key, node.value))
             self._in_order(node.right)
 
     def post_order(self):
-        '''对二叉搜索树进行后序遍历'''
+        '''深度优先遍历
+        对二叉搜索树进行后序遍历，引用方法
+
+        从底层到顶层遍历，可用于删除情景;
+        '''
         self._post_order(self.root)
 
     def _post_order(self, node):
+        '''对二叉搜索树进行后序遍历，执行方法
+        如果节点不为空，则递归左子节点，然后递归右子节点，最后打印自身
+
+        Agre:
+            node: 节点
+        '''
         if node is not None:
             self._post_order(node.left)
             self._post_order(node.right)
-            print(node.value)
+            print('{key: %s, value: %s}' % (node.key, node.value))
+
+    def _remove_post_order(self, node):
+        '''使用后序遍历删除树中的所有节点，析构函数的执行方法
+
+        Agre:
+            node: 节点
+        '''
+        if node is not None:
+            self._remove_post_order(node.left)
+            self._remove_post_order(node.right)
+            del node
 
     def level_order(self):
-        '''层序遍历（广度优先遍历）
+        '''广度优先遍历
+        层序遍历
+
         引入一个队列，将跟节点入队；
         while循环，判断队列是否为空，如果不为空则循环；
         循环中，将队首的元素拿出并出队，然后将它左右子节点入队，直至最后一层；
         '''
+        q = queue.Queue()
+        q.put(self.root)
+        while not q.empty():
+            node = q.get()
+            print('{key: %s, value: %s}' % (node.key, node.value))
+            if node.left is not None:
+                q.put(node.left)
+            if node.right is not None:
+                q.put(node.right)
 
-    def minimum(self):
-        '''寻找最小值的键值
-        向左查询，直到某个节点没有左节点
-        可递归，可迭代
-        maximum类似
+    def minimum(self, type="recursion"):
+        '''寻找最小值的键值，引用方法
+
+        Agre:
+            type: 执行方法
+        return:
+            None或节点的键值
         '''
+        if self.root is None:
+            return None
+        if type == 'recursion':
+            return self._minimum_recursion(self.root)
+        else:
+            return self._minimum_iteration(self.root)
 
-    def remove_min(self):
-        '''删除掉最小值所在的节点
-        递归节点，判断左子节点是否存在，如果存在，则继续递归左子节点，并且，将递归结果赋值给节点的左子节点；
-        如果左子节点不存在，则说明此节点即为最小节点，那么将右子节点取出，并删除掉左子节点，返回右子节点。
-        递归的返回值会赋值到上一层的左子节点上，这样就实现了删除的节点的子节点移动到删除的节点的父节点上。
-        删除最小值同理，查右子节点，删除右子节点，返回左子节点，赋值给父节点的右子节点。
-        记得count--；
-        递归迭代均可
+    def _minimum_recursion(self, node):
+        '''寻找最小值的键值，执行方法，递归版
+        向左查询，直到某个节点没有左节点，那么此节点即为最小值的节点；
+
+        Agre:
+            node: 节点
+        return:
+            节点的键值
         '''
+        if node.left is None:
+            return node.key
+        return self._minimum_recursion(node.left)
 
-    def print_root(self, node='root'):
-        if node == 'root':
-            node = self.root
+    def _minimum_iteration(self, node):
+        '''寻找最小值的键值，执行方法，迭代版
+        如果节点的左子节点不为空，则一直循环，直到节点的左子节点为空；
+
+        Agre:
+            node: 节点
+        return:
+            节点的键值
+        '''
+        while node.left is not None:
+            node = node.left
+        return node.key
+
+    def maximum(self, type="recursion"):
+        '''寻找最大值的键值，引用方法
+
+        Agre:
+            type: 执行方法
+        return:
+            None或节点的键值
+        '''
+        if self.root is None:
+            return None
+        if type == "recursion":
+            return self._maximum_recursion(self.root)
+        else:
+            return self._maximum_iteration(self.root)
+
+    def _maximum_recursion(self, node):
+        '''寻找最大值的键值，执行方法，递归版
+        判断节点的右子节点是否为空，如果是则返回节点的键值；否则递归节点的右子节点；
+
+        Agre:
+            node: 节点
+        return:
+            节点的键值
+        '''
+        if node.right is None:
+            return node.key
+        return self._maximum_recursion(node.right)
+
+    def _maximum_iteration(self, node):
+        '''寻找最大值的键值，执行方法，迭代版
+        如果节点的右子节点不为空，则执行循环，将右子节点替换为当前节点继续进行判断，直到节点的右子节点为空
+
+        Agre:
+            node: 节点
+        return:
+            节点的键值
+        '''
+        while node.right is not None:
+            node = node.right
+        return node.key
+
+    def remove_min(self, type="recursion"):
+        '''删除掉最小值所在的节点，引用方法
+
+        Agre:
+            type: 执行方法
+        '''
+        if self.root is not None:
+            if type == 'recursion':
+                self._remove_min_recursion(self.root)
+            else:
+                self._remove_min_iteration(self.root)
+
+    def _remove_min_recursion(self, node):
+        '''删除掉最小值所在的节点，执行方法，递归版
+        判断节点的左子节点是否为空，如果为空则获取此节点的右子节点并删除此节点，树的元素个数减一，返回右子节点；
+        如果节点不为空，则递归节点的左子节点，并且将结果赋值给节点的左子节点，返回此节点；
+        Agre:
+            node: 节点
+        return:
+            node节点
+        '''
+        if node.left is None:
+            right = node.right
+            del node
+            self.count -= 1
+            return right
+        node.left = self._remove_min_recursion(node.left)
+        return node
+
+    def _remove_min_iteration(self, node):
+        '''删除掉最小值所在的节点，执行方法，迭代版
+        while循环，判断节点是否为空，为空则跳出循环；
+        循环中，判断节点的左子节点的左子节点是否为空，如果是则将节点的左子节点的右子节点移动到节点的左子节点上(删除最小值，将最小值所在的节点的右字节移动)；
+        树的节点数减一；
+
+        Agre:
+            node: 节点
+        '''
+        while node is not None:
+            if node.left.left is None:
+                right = node.left.right
+                node.left = right
+                self.count -= 1
+                break
+            node = node.left
+
+    def remove_max(self, type="recursion"):
+        '''删除掉最大值所在的节点，引用方法
+
+        Agre:
+            type: 执行方法
+        '''
+        if self.root is not None:
+            if type == 'recursion':
+                self._remove_max_recursion(self.root)
+            else:
+                self._remove_max_iteration(self.root)
+
+    def _remove_max_recursion(self, node):
+        '''删除掉最大值所在的节点，执行方法，递归版
+        原理同删除最小值所在的节点方法
+
+        Agre:
+            node: 节点
+        return:
+            节点
+        '''
+        if node.right is None:
+            left = node.left
+            del node
+            self.count -= 1
+            return left
+        node.right = self._remove_max_recursion(node.right)
+        return node
+
+    def _remove_max_iteration(self, node):
+        '''删除掉最大值所在的节点，执行方法，迭代版
+        原理同删除最小值所在的节点方法
+
+        Agre:
+            node: 节点
+        '''
+        while node is not None:
+            if node.right.right is None:
+                node.right = node.right.left
+                self.count -= 1
+                break
+            node = node.right
+
+    def print_root(self):
+        if self.root is not None:
+            self._print_root(self.root)
+
+    def _print_root(self, node, level=0):
         if node is not None:
-            print('%s: %s' % (node.key, node.value))
-            self.print_root(node.left)
-            self.print_root(node.right)
+            level += 1
+            self._print_root(node.left, level)
+            self._print_root(node.right, level)
+            print('%s%s---%s' % ('---' * level, node.key, node.value))
 
 
 if __name__ == "__main__":
-    b = BinarySearchTree()
-    for i in range(0, 10):
-        value = random.randint(100, 1000)
-        b[i] = value
-    b.print_root()
-    print(b[7])
-
-
-# 用后序遍历析构类
+    tree = BinarySearchTree()
+    tree[28] = 'a'
+    tree[16] = 'b'
+    tree[30] = 'c'
+    tree[13] = 'd'
+    tree[22] = 'e'
+    tree[29] = 'f'
+    tree[42] = 'g'
+    tree.remove_max('iteration')
+    tree.print_root()
