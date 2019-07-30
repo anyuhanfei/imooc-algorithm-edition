@@ -472,6 +472,42 @@ class BinarySearchTree{
             $node = $node->right;
         }
     }
+
+    public function remove($key){
+        $this->root = $this->_remove($this->root, $key);
+    }
+
+    private function _remove($node, $key){
+        if($node == null){
+            return null;
+        }elseif($key < $node->key){
+            $node->left = $this->_remove($node->left, $key);
+            return $node;
+        }elseif($key > $node->key){
+            $node->right = $this->_remove($node->right, $key);
+            return $node;
+        }else{
+            if($node->left == null){
+                $right = $node->left;
+                $this->count--;
+                return $right;
+            }
+            if($node->right == null){
+                $left = $node->right;
+                $this->count--;
+                return $left;
+            }
+            $temp_node = $node->right;
+            while($temp_node->left != null){
+                $temp_node = $temp_node->left;
+            }
+            $successor = new TreeNode($temp_node->key, $temp_node->value);
+            $this->_remove_min_recursion($node->right);
+            $successor->left = $node->left;
+            $successor->right = $node->right;
+            return $successor;
+        }
+    }
 }
 
 
@@ -485,5 +521,5 @@ $tree->insert(29, 'f');
 $tree->insert(42, 'g');
 $tree->insert(14, 'h');
 $tree->insert(41, 'i');
-$tree->remove_max();
+$tree->remove(28);
 print_r($tree->root);

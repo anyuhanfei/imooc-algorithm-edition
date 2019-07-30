@@ -427,6 +427,55 @@ class BinarySearchTree:
                 break
             node = node.right
 
+    def remove(self, key):
+        self.root = self._remove(self.root, key)
+
+    def _remove(self, node, key):
+        '''移除指定键值的节点
+        判断是否为空，键值小于当前节点的键值，键值小于当前节点的键值，键值等于当前节点的键值；
+        如果为空则返回None；如果大于和小于均进行递归操作，递归返回值赋值给对应的子节点，返回当前节点；
+        如果为等于，则判断当前节点的左右子节点情况；如果左右子节点有空，则将另外一边子节点替换到当前节点的位置上（类似删除最大最小值操作）；
+        如果左右节点均有子节点，那么将右子节点的最小键值的节点替换到当前节点上，并删除右子节点的最小键值的节点（或左子节点的最大键值的节点）；
+
+        最后一步具体操作：目前指定键值的节点就是当前节点，先找到当前节点的右子节点的最小键值的节点，然后用这个节点的key和value生成一个新节点；
+                        使用删除最小键值的节点的函数(_remove_min_iteration)，将当前节点的右子节点的最小键值的节点删除；
+                        然后将当前节点的左右节点赋值给新节点上，返回新节点；
+                        因为递归方法在赋值操作上，所以当前递归层执行完毕后，返回的新节点会自动赋值到指定键值的节点的位置上；
+
+        Agre:
+            node: 节点
+            key: 键值
+        return:
+            节点
+        '''
+        if node is None:
+            return None
+        if key < node.key:
+            node.left = self._remove(node.left, key)
+            return node
+        elif key > node.key:
+            node.right = self._remove(node.right, key)
+            return node
+        else:
+            if node.left is None:
+                right = node.right
+                del node
+                self.count -= 1
+                return right
+            if node.right is None:
+                left = node.left
+                del node
+                self.count -= 1
+                return left
+            temp_node = node.right
+            while temp_node.left is not None:
+                temp_node = temp_node.left
+            successor_node = TreeNode(temp_node.key, temp_node.value)
+            self._remove_min_iteration(node.right)
+            successor_node.left = node.left
+            successor_node.right = node.right
+            return successor_node
+
     def print_root(self):
         if self.root is not None:
             self._print_root(self.root)
@@ -448,5 +497,6 @@ if __name__ == "__main__":
     tree[22] = 'e'
     tree[29] = 'f'
     tree[42] = 'g'
-    tree.remove_max('iteration')
+    tree[41] = 'h'
+    tree.remove(28)
     tree.print_root()
