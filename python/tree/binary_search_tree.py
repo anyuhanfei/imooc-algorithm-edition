@@ -428,10 +428,15 @@ class BinarySearchTree:
             node = node.right
 
     def remove(self, key):
+        '''移除指定键值的节点，引用方法
+
+        Agre:
+            key: 键值
+        '''
         self.root = self._remove(self.root, key)
 
     def _remove(self, node, key):
-        '''移除指定键值的节点
+        '''移除指定键值的节点，执行方法
         判断是否为空，键值小于当前节点的键值，键值小于当前节点的键值，键值等于当前节点的键值；
         如果为空则返回None；如果大于和小于均进行递归操作，递归返回值赋值给对应的子节点，返回当前节点；
         如果为等于，则判断当前节点的左右子节点情况；如果左右子节点有空，则将另外一边子节点替换到当前节点的位置上（类似删除最大最小值操作）；
