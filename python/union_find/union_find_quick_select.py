@@ -1,4 +1,4 @@
-class QuickUnionFund:
+class UnionFindQuickSelect:
     '''快速查找的并查集
     查操作时间复杂度为O(1)，并集操作时间复杂度为O(n²)
     '''
@@ -58,7 +58,8 @@ if __name__ == "__main__":
     for i in range(10, 10 + list_len):
         init_list.append(i)
 
-    fund = QuickUnionFund(init_list)
+    fund = UnionFindQuickSelect(init_list)
+
     print(fund.root)
     fund.unionElements(12, 13)
     print(fund.root)
