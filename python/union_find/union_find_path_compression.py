@@ -20,7 +20,7 @@ class UnionFindPathCompression:
         再循环判断键和值是否相同，不相同则向上循环，直到查询到键值相同的元素，返回键值；
         每次循环中，将节点指向自己的父节点的父节点；
         '''
-        if key < 0 and key >= self.count:
+        if key < 0 or key >= self.count:
             return None
         while self.root[key] != key:
             self.root[key] = self.root[self.root[key]]

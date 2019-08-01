@@ -16,13 +16,15 @@ class UnionFindQuickSelect:
         for i in range(0, self.count):
             self.root.update({init_list[i]: i})
 
-    def find(self, value):
+    def find(self, key):
         '''查询一个元素值所在的组
 
         Agre:
-            value: 元素值(键)
+            key: 元素值(键)
         '''
-        return self.root[value]
+        if key < 0 or key >= self.count:
+            return None
+        return self.root[key]
 
     def isConnected(self, p, q):
         '''查询两个元素值是否是连接状态(是否在同一个组)

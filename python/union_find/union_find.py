@@ -23,7 +23,7 @@ class UnionFind:
         return:
             None 或键值
         '''
-        if key < 0 and key >= self.count:
+        if key < 0 or key >= self.count:
             return None
         while self.root[key] != key:
             key = self.root[key]

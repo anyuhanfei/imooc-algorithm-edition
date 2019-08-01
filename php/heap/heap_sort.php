@@ -1,6 +1,6 @@
 <?php
 include_once("max_heap.php");
-include_once("../disorderly_array.php");
+include_once("../generated_data.php");
 
 /**
  * 堆排序一，将未排序数组元素一一添加入堆中
