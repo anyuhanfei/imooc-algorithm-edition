@@ -37,17 +37,32 @@ class DenseGraph:
     def hasEdge(self, v, w):
         '''判断节点v和节点w是否有连接（v->w）
         '''
-        assert v in self.vector
-        assert w in self.vector
+        assert v in self.vector.keys()
+        assert w in self.vector.keys()
         return self.vector[v][w]
 
     def addEdge(self, v, w):
         '''添加一个连接'''
-        assert v in self.vector
-        assert w in self.vector
+        assert v in self.vector.keys()
+        assert w in self.vector.keys()
         if self.hasEdge(v, w):
             return
         self.vector[v][w] = True
         if self.directed is False:
             self.vector[w][v] = True
         self.m_count += 1
+
+    def getEdge(self, v):
+        assert v in self.vector.keys()
+        res_list = []
+        for i in self.vector[v].keys():
+            if self.vector[v][i] is True:
+                res_list.append(self.vector[v][i])
+
+    def getAllEdge(self):
+        res_list = dict()
+        for i in self.vector.keys():
+            res_list[i] = []
+            for o in self.vector[i].keys():
+                res_list[i].append(o) if self.vector[i][o] is True else False
+        return res_list

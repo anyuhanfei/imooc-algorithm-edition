@@ -44,3 +44,10 @@ class SparseGraph:
     def updateEdge(self):
         for i in self.vector.keys():
             self.vector[i] = list(set(self.vector[i]))
+
+    def getEdge(self, v):
+        assert v in self.vector
+        return self.vector[v]
+
+    def getAllEdge(self):
+        return self.vector
