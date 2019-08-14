@@ -37,17 +37,21 @@ class SparseGraph:
         self.m_count += 1
 
     def hasEdge(self, v, w):
+        '''判断 v 和 w 是否连接'''
         assert v in self.vector
         assert w in self.vector
-        return bool(self.vector[v].count())
+        return bool(w in self.vector[v])
 
     def updateEdge(self):
+        '''更新图，将重复连接删除'''
         for i in self.vector.keys():
             self.vector[i] = list(set(self.vector[i]))
 
     def getEdge(self, v):
+        '''获取节点的连接节点'''
         assert v in self.vector
         return self.vector[v]
 
     def getAllEdge(self):
+        '''获取所有节点的连接节点'''
         return self.vector

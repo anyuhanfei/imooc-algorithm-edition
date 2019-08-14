@@ -53,6 +53,7 @@ class DenseGraph:
         self.m_count += 1
 
     def getEdge(self, v):
+        '''查询一个节点的连接节点'''
         assert v in self.vector.keys()
         res_list = []
         for i in self.vector[v].keys():
@@ -60,6 +61,7 @@ class DenseGraph:
                 res_list.append(self.vector[v][i])
 
     def getAllEdge(self):
+        '''查询所有节点的连接节点'''
         res_list = dict()
         for i in self.vector.keys():
             res_list[i] = []
