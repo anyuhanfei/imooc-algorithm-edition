@@ -58,7 +58,8 @@ class DenseGraph:
         res_list = []
         for i in self.vector[v].keys():
             if self.vector[v][i] is True:
-                res_list.append(self.vector[v][i])
+                res_list.append(i)
+        return res_list
 
     def getAllEdge(self):
         '''查询所有节点的连接节点'''

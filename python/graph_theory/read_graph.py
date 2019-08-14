@@ -1,5 +1,6 @@
 from dense_graph import DenseGraph
 from sparse_graph import SparseGraph
+from component import Component
 
 
 class ReadGraph:
@@ -15,9 +16,16 @@ class ReadGraph:
                 else:
                     self.graph.addEdge(int(a), int(b))
                 one += 1
+
+    def get_graph(self):
+        return self.graph
+
+    def print_all_edge(self):
         print(self.graph.getAllEdge())
 
 
 if __name__ == "__main__":
-    rgs = ReadGraph('sparse', 'D:\\project\\imooc-algorithm-edition-master\\python\\graph_theory\\testG1.txt')
-    rgd = ReadGraph('dense', 'D:\\project\\imooc-algorithm-edition-master\\python\\graph_theory\\testG1.txt')
+    rgs = ReadGraph('dense', './python/graph_theory/testG2.txt')
+    c = Component(rgs.get_graph())
+    print(c.count())
+    rgd = ReadGraph('sparse', './python/graph_theory/testG1.txt')
