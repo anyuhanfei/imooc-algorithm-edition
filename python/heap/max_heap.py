@@ -42,7 +42,7 @@ class MaxHeap:
         其他有子节点的节点需要倒序依次进行向下判断。
         '''
         self.data = self.data + init_list
-        self.count = len(init_list)
+        self.count += len(init_list)
         for i in range(int(self.count/2), 0, -1):
             self._shift_down(i)
 
